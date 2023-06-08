@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd 
+">
+<log4j:configuration
+	xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<!-- 얘가 콘솔에 출력되게 만듦ㅇㅇ -->
+	<appender name="console"
+		class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Application Loggers -->
+	<logger name="com.yedam.app">
+		<level value="info" />
+	</logger>
+
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.beans">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.context">
+		<level value="info" />
+	</logger>
+	<!-- bean들이 작동하는지는 상기 3개 -->
+	<!-- web관련은 이하 한 개 -->
+	<logger name="org.springframework.web">
+		<level value="info" />
+	</logger>
+
+	<!-- SQL log -->
+	<!-- 이하 한개 sql문 -->
+	<logger name="jdbc.sqlonly">
+		<level value="info" />
+	</logger>
+
+	<!-- 하기 2개, 잘 보기ㅇㅇ -->
+	<!-- slq 타이밍, 시간 -->
+	<logger name="jdbc.sqltiming">
+		<level value="info" />
+	</logger>
+
+	<logger name="jdbc.resultsettable">
+		<level value="info" />
+	</logger>
+	<!-- 상기 한 개 가장 많이 쓰임ㅇㅇ select한 결과를 테이블형태로 보여줌ㅇㅇ -->
+	
+	<logger name="jdbc.audit">
+		<level value="warn" />
+	</logger>
+
+	<logger name="jdbc.resultset">
+		<level value="warn" />
+	</logger>
+
+	<!-- 개별은(각각 범위, 레벨 설정 가능)이 위, 기타 내용은 이 아래에서 처리 -->
+	
+	<!-- Root Logger -->
+	<root>
+		<priority value="warn" />
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

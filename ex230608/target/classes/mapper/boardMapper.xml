@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yedam.app.board.mapper.BoardMapper">
+
+	<sql id="boardSelect">
+		SELECT bno,
+				title,
+				contents,
+				writer,
+				regdate,
+				updatedate,
+				image
+		FROM board
+	</sql>
+
+	<!-- 전체조회 -->
+	<select id="selectBoardList" resultType="BoardVO">
+		<include refid="boardSelect" />
+		ORDER BY bno
+	</select>
+
+	<!-- 단건조회 : 조건 1) 글번호 2) 작가 -->
+	<select id="selectBoardInfo" resultType="BoardVO">
+		<include refid="boardSelect" />
+		<where>
+			<if test="writer != null and !writer.equals('')">
+				AND writer = #{writer}
+			</if>
+			AND bno = #{bno}
+		</where>
+	</select>
+
+	<!-- 등록 : 필수조건 & 옵션 -->
+	<insert id="insertBoard" parameterType="BoardVO">
+		<selectKey keyProperty="bno" resultType="int" order="BEFORE">
+			SELECT
+			NVL(MAX(bno), 0) + 1
+			FROM board
+		</selectKey>
+		INSERT INTO board (
+		bno
+		, title
+		, contents
+		, writer
+		<if test="image != null and !image.equals('')">
+			, image
+		</if>
+		)
+		VALUES (
+		#{bno}
+		, #{title}
+		, #{contents}
+		, #{writer}
+		<if test="image != null and !image.equals('')">
+			, #{image}
+		</if>
+		)
+	</insert>
+
+	<!-- 수정 : 대상 (제목, 내용, 이미지, 수정날짜(반드시) -->
+	<update id="updateBoard" parameterType="BoardVO">
+		UPDATE board
+		<set>
+			<if test="title != null and title != ''">
+				title=#{title},
+			</if>
+			<if test="contents != null and contents != ''">
+				contents=#{contents},
+			</if>
+			<if test="image != null and image != ''">
+				image=#{image},
+			</if>
+			<if test="updatedate != null">
+				updatedate=#{updatedate}
+			</if>
+			<if test="updatedate == null">
+				updatedate=sysdate
+			</if>
+		</set>
+		WHERE bno=#{bno}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteBoard" parameterType="BoardVO">
+		DELETE FROM board 
+		WHERE bno=#{bno}
+	</delete>
+</mapper>

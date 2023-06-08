@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<definition name="mainTemplate"
+		template="/WEB-INF/views/tiles/layout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/tiles/header.jsp" />
+		<put-attribute name="footer"
+			value="/WEB-INF/views/tiles/footer.jsp" />
+	</definition>
+	
+		<definition name="boardTemplate"
+		template="/WEB-INF/views/board/layout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/board/header.jsp" />
+	</definition>
+	
+		<definition name="board/*" extends="boardTemplate">
+		<put-attribute name="content"
+			value="/WEB-INF/views/board/{1}.jsp" />
+	</definition>
+
+	<definition name="home" extends="boardTemplate">
+		<put-attribute name="content"
+			value="/WEB-INF/views/home.jsp" />
+	</definition>
+	
+	<definition name="*/*" extends="mainTemplate">
+		<put-attribute name="content"
+			value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	<!-- <definition name="*/*" 이렇게 되어있으면 가장 마지막에 위치하게 할 것. 와일드카드. 가장 마지막에 두는 
+		게 좋음. -->
+	<!-- 찾으면 중단됨? -->
+
+</tiles-definitions>
