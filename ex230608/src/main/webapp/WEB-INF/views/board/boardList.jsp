@@ -24,7 +24,7 @@
 					<td>${board.bno}</td>
 					<td>${board.title}</td>
 					<td>${board.writer}</td>
-					<td><fmt:formatDate value="${board.regdate}" pattern="yy-MM-dd"/></td>
+					<td><fmt:formatDate value="${board.regdate}" pattern="yyyy년 MM월 dd일"/></td>
 				</tr>
 			</c:forEach>
 		</tbody>
