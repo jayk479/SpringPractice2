@@ -57,8 +57,11 @@ public class BoardController {
 	// 수정 - 처리 : URI - boardUpdate, RETURN - 성공여부만 반환
 	@PostMapping("boardUpdate")
 	public String boardUpdate(BoardVO boardVO) {
-		boardServiceImpl.updateBoardInfo(boardVO);
-		return "redirect:boardList";
+		int result = boardServiceImpl.updateBoardInfo(boardVO);
+//		if(result > 0) {
+//			return 
+//		}
+		return "success";
 	}
 	
 	
