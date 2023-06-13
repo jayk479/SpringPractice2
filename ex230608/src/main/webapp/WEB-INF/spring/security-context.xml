@@ -1,45 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:security="http://www.springframework.org/schema/security"
-   xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-      
-      <!-- http : 경로에 대해서 인증, 인가 설정 -->
-      <!-- 1) 아래 경로는 security 적용하지 않음 ( 정적인 파일은 경로 적용X )  -->
-  <security:http pattern="/css/**" security="none"/>
-  
-      <!-- 2) 경로 패턴으로 인증, 인가 받아야 하는지 확인함. -->
-      <!-- intercept-url : 낚아채서 체크함 ( 불시검문 ) -->
-         <!-- pattern을 기준으로 순차적으로 확인함. ★★★ 순서 매우 중요 ★★★ -->
-         <!-- 개별, 개별 확인 후 ** default? 확인해야 함. -->
-      <!-- access : 인증, 인가 조건-->
-      
-   <security:http>
-   <!-- 순서중요!! -->
-      <security:intercept-url pattern="/top.jsp" access="permitAll()"/><!--  인증 필요xxx 모든 사용자 접근 가능 -->
-      <security:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')"/><!-- 해당경로로 접근한 user 인증 -> 권한 : ROLE_ADMIN 있는지 확인 -->
-      <security:intercept-url pattern="/**" access="isAuthenticated()"/> <!-- 인증만 되면 접근 가능 // 인가 상관없음 --> <!-- /** 제일 마지막 순서-->
-      <security:form-login default-target-url="/top.jsp"/> <!-- form 태그로 로그인 하면 security가 낚아챔. // 인증하는 페이지로 이동시킴. -->
-                                                                                       <!-- security에 내장되어 있는 것으로 인증, 인가 확인???? -->
-      <security:logout logout-url="/logout" logout-success-url="/top.jsp"/>
-      <!-- session 파괴 알아서 해주는 거와 같음ㅇㅇ -->
-      <security:csrf disabled="true"/>
-   </security:http>
-   
-   <security:authentication-manager>
-      <security:authentication-provider>
-         <security:user-service>
-         <!-- noop 암호화되지 않았다고 명시하는 거 이거 배포시 다 지워야 됨ㅇㅇ -->
-         <!-- ROLL_XX 는 변경해도 상관XX 관습적으로 권한부여, 분류함 그저 TEXT에 불과함 -->
-         <!-- 한번 인증이 된 상태라면 LOGOUT하지 않는 이상 계속 유지되어있음ㅇㅇ -->
-         <!-- 인증이 이후 인가만 확인하는거야? -->
-         <!-- security에 대해서 두 가지로 나뉨 1)경로 2)userService -->
-            <security:user name="user" password="{noop}1234" authorities="ROLE_USER"/>
-            <security:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN"/>
-         </security:user-service>
-      </security:authentication-provider>
-   </security:authentication-manager>
+
+	<!-- http : 경로에 대해서 인증, 인가 설정 -->
+	<!-- 1) 아래 경로는 security 적용하지 않음 ( 정적인 파일은 경로 적용X ) -->
+	<security:http pattern="/css/**" security="none" />
+
+	<!-- 2) 경로 패턴으로 인증, 인가 받아야 하는지 확인함. -->
+	<!-- intercept-url : 낚아채서 체크함 ( 불시검문 ) -->
+	<!-- pattern을 기준으로 순차적으로 확인함. ★★★ 순서 매우 중요 ★★★ -->
+	<!-- 개별, 개별 확인 후 ** default? 확인해야 함. -->
+	<!-- access : 인증, 인가 조건 -->
+
+	<security:http>
+		<!-- 순서중요!! -->
+		<security:intercept-url pattern="/top.jsp"
+			access="permitAll()" /><!-- 인증 필요xxx 모든 사용자 접근 가능 -->
+		<security:intercept-url pattern="/admin/**"
+			access="hasAuthority('ROLE_ADMIN')" /><!-- 해당경로로 접근한 user 인증 -> 권한 : ROLE_ADMIN 
+			있는지 확인 -->
+		<security:intercept-url pattern="/**"
+			access="isAuthenticated()" /> <!-- 인증만 되면 접근 가능 // 인가 상관없음 --> <!-- /** 제일 마지막 순서 -->
+		<security:form-login default-target-url="/top.jsp" /> <!-- form 태그로 로그인 하면 security가 낚아챔. // 인증하는 페이지로 이동시킴. -->
+		<!-- security에 내장되어 있는 것으로 인증, 인가 확인???? -->
+		<security:logout logout-url="/logout"
+			logout-success-url="/top.jsp" />
+		<!-- session 파괴 알아서 해주는 거와 같음ㅇㅇ -->
+		<!-- <security:csrf disabled="true" /> -->
+	</security:http>
+	
+	<bean id="userDetailService" class="com.yedam.app.user.service.CostomerUserDetailsService" />
+
+
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref ="userDetailService">
+		<!-- 	<security:user-service> -->
+				<!-- noop 암호화되지 않았다고 명시하는 거 이거 배포시 다 지워야 됨ㅇㅇ -->
+				<!-- ROLL_XX 는 변경해도 상관XX 관습적으로 권한부여, 분류함 그저 TEXT에 불과함 -->
+				<!-- 한번 인증이 된 상태라면 LOGOUT하지 않는 이상 계속 유지되어있음ㅇㅇ -->
+				<!-- 인증이 이후 인가만 확인하는거야? -->
+				<!-- security에 대해서 두 가지로 나뉨 1)경로 2)userService -->
+				<!-- <security:user name="user" password="{noop}1234" authorities="ROLE_USER"/> 
+					<security:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN"/> -->
+		<!-- 	</security:user-service> -->
+		<!-- user DB연결 -->
+		 <!-- <security:jdbc-user-service data-source-ref="dataSource" 
+		 
+	 	
+          users-by-username-query
+            ="select LOGIN_ID, '{noop}' || PASSWORD, 1
+              from T_USER
+              where LOGIN_ID = ?"
+          authorities-by-username-query
+            ="select LOGIN_ID, ROLE_NAME
+              from T_ROLE
+                inner join T_USER_ROLE on T_ROLE.ID = T_USER_ROLE.ROLE_ID
+                inner join T_USER on T_USER_ROLE.USER_ID = T_USER.ID
+              where LOGIN_ID = ?" />
+ -->
+	 	<!-- DB연결하고 SERVICE만드렁서 상기 SQL노필요 -->
+		
+		</security:authentication-provider>
+	</security:authentication-manager>
 
 
 </beans>
