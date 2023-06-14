@@ -86,6 +86,7 @@ public class BoardController {
 		map.put("board_no", boardNo);
 		
 		return map;
+
 	}
 //	public String boardUpdate(BoardVO boardVO) {
 //		boardServiceImpl.updateBoardInfo(boardVO);	
